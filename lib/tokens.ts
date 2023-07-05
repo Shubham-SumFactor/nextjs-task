@@ -23,3 +23,19 @@ export const refreshAccessToken = (tokenUser: refreshJwtToken) => {
     return jwt.sign(tokenUser.user, refreshToken)
 }
 
+
+export const verifyToken=(req:NextApiRequest,res:NextApiResponse,next:()=>void)=>{
+    // console.log({req});
+    if(req.headers['authorization']?.split(' ')[1]==null){
+        return res.send(401);
+
+    }
+
+    jwt.verify(req.headers['authorization']?.split(' ')[1],secret,(err:any,user:any)=>{
+        if(err){
+            return res.status(403).send({message:"forbidden"});
+        }
+        next();
+
+    })}
+
