@@ -1,18 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import * as jwt from 'jsonwebtoken';
+import { verifyToken } from "@/lib/tokens";
 import { executeQuery } from "@/lib/connectDatabase";
 
 
 export default async function getAllUsers (req: NextApiRequest, res: NextApiResponse) {
     if(req.method=='GET') {
         try {
-
+            verifyToken(req, res, async()=>{
             const getRecord = `select * from users_table;`
 
             let resultset: any = await executeQuery(getRecord)
 
-            res.status(200).send({message:resultset});
-
+            return res.status(200).send({message: resultset });
+        });
         } catch (error) {
             res.status(500).send('Internal Server Error');
 
