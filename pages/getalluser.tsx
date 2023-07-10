@@ -46,7 +46,7 @@ const UserAll = () => {
               <th>F_Name</th>
               <th>L_Name</th>
               <th>Email</th>
-              {/* Add more table headers if necessary */}
+             
             </tr>
           </thead>
           <tbody>
@@ -55,7 +55,7 @@ const UserAll = () => {
                 <td>{user.f_name}</td>
                 <td>{user.l_name}</td>
                 <td>{user.email}</td>
-                {/* Add more table cells based on user properties */}
+               
               </tr>
             ))}
           </tbody>
