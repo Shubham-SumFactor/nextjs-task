@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 
 interface User {
+  id: string;
   f_name: string;
   l_name: string;
   email: string;
@@ -10,6 +11,10 @@ interface User {
 const UserAll = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    handleGetAllUsers();
+  }, []);
 
   const handleGetAllUsers = async () => {
     setIsLoading(true);
@@ -32,7 +37,32 @@ const UserAll = () => {
     setIsLoading(false);
   };
 
+// ========
 
+const handleDeleteUser = async (email:string) => {
+  setIsLoading(true);
+  try {
+    const response = await fetch(`/api/delete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data.message);
+      setUsers(users.filter((user) => user.email !== email));
+    } else {
+      console.log('Error deleting user');
+      window.alert('Error deleting user');
+    }
+  } catch (error) {
+    console.error('An error occurred while deleting user', error);
+  }
+  setIsLoading(false);
+};
   return (
     <div>
       <h1>All Users</h1>
@@ -43,8 +73,8 @@ const UserAll = () => {
         <table>
           <thead>
             <tr>
-              <th>F_Name</th>
-              <th>L_Name</th>
+              <th>First Name</th>
+              <th>Last Name</th>
               <th>Email</th>
              
             </tr>
@@ -55,7 +85,11 @@ const UserAll = () => {
                 <td>{user.f_name}</td>
                 <td>{user.l_name}</td>
                 <td>{user.email}</td>
-               
+                <td>
+                  <button onClick={() => handleDeleteUser(user.email)} disabled={isLoading}>
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
